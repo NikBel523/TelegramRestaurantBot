@@ -75,12 +75,14 @@ async def load_price(message: types.Message, state: FSMContext):
     await state.finish()
 
 
+# Delete chosen menu item
 @dp.callback_query_handler(lambda x: x.data and x.data.startswith("del "))
 async def del_callback_run(callback_query: types.CallbackQuery):
     await sqlite_db.sql_delete_command(callback_query.data.replace("del ", ""))
     await callback_query.answer(text=f"{callback_query.data.replace('del ', '')} deleted.", show_alert=True)
 
 
+# Show all menu items to admin with inline "Delete" buttons
 @dp.message_handler(commands="Delete")
 async def delete_item(message: types.Message):
     if message.from_user.id == ID:
