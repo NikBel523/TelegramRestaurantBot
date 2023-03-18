@@ -2,11 +2,12 @@ from aiogram import types, Dispatcher
 
 from create_bot import bot
 from data_base import sqlite_db
+from keyboards import kb_client
 
 
 async def command_start(message: types.Message):
     try:
-        await bot.send_message(message.from_user.id, "Greetings!")
+        await bot.send_message(message.from_user.id, "Greetings!", reply_markup=kb_client)
         await message.delete()
     except:
         await message.reply("In order to use bot, please send it a message first: \nhttps://t.me/example_restaurant_bot")
