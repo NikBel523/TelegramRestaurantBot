@@ -1,9 +1,10 @@
 from aiogram import types, Dispatcher
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
-from create_bot import bot
+from create_bot import dp, bot
 from data_base import sqlite_db
 from keyboards import admin_kb
 
@@ -72,6 +73,23 @@ async def load_price(message: types.Message, state: FSMContext):
         data["price"] = float(message.text)
     await sqlite_db.sql_add_command(state)
     await state.finish()
+
+
+@dp.callback_query_handler(lambda x: x.data and x.data.startswith("del "))
+async def del_callback_run(callback_query: types.CallbackQuery):
+    await sqlite_db.sql_delete_command(callback_query.data.replace("del ", ""))
+    await callback_query.answer(text=f"{callback_query.data.replace('del ', '')} deleted.", show_alert=True)
+
+
+@dp.message_handler(commands="Delete")
+async def delete_item(message: types.Message):
+    if message.from_user.id == ID:
+        read = await sqlite_db.admin_menu_read()
+        for ret in read:
+            await bot.send_photo(message.from_user.id, ret[0], f"{ret[1]}\nDescription: {ret[2]}\nPrice {ret[-1]}")
+            await bot.send_message(message.from_user.id, text="^^^", reply_markup=InlineKeyboardMarkup()
+                                   .add(InlineKeyboardButton(f"Delete {ret[1]}", callback_data=f"del {ret[1]}"))
+                                   )
 
 
 def register_handlers_admin(dp: Dispatcher):

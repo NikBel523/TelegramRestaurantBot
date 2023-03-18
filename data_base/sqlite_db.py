@@ -22,6 +22,15 @@ async def sql_add_command(state):
 
 
 # Fetch and show all menu items from database
-async def sql_read(message):
+async def client_menu_read(message):
     for ret in cur.execute("SELECT * FROM menu").fetchall():
         await bot.send_photo(message.from_user.id, ret[0], f"{ret[1]}\nDescription: {ret[2]}\nPrice {ret[-1]}")
+
+
+async def admin_menu_read():
+    return cur.execute("SELECT * FROM menu").fetchall()
+
+
+async def sql_delete_command(data):
+    cur.execute("DELETE FROM menu WHERE name == ?", (data,))
+    base.commit()

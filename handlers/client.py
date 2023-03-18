@@ -23,7 +23,7 @@ async def address_command(message: types.Message):
 
 # Show all menu items to client
 async def show_menu_command(message: types.Message):
-    await sqlite_db.sql_read(message)
+    await sqlite_db.client_menu_read(message)
 
 
 def register_handlers_client(dp: Dispatcher):
