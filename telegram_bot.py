@@ -1,18 +1,16 @@
-from aiogram import Bot, types
-from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
-
-import os
-
-TOKEN = os.environ.get("TELEGRAM_RESTAURANT_BOT")
-
-bot = Bot(token=TOKEN)
-dp = Dispatcher(bot)
+from create_bot import dp
+from handlers import other
 
 
-@dp.message_handler()
-async def echo_send(message: types.Message):
-    await message.answer(message.text)
+async def on_startup(_):
+    print("Bot online")
 
 
-executor.start_polling(dp, skip_updates=True)
+
+other.register_handlers_other(dp=dp)
+
+
+if __name__ == "__main__":
+    executor.start_polling(dp, skip_updates=True, on_startup=on_startup)
+
