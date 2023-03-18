@@ -1,13 +1,13 @@
 from aiogram.utils import executor
 from create_bot import dp
-from handlers import other
+from handlers import client, other
 
 
 async def on_startup(_):
     print("Bot online")
 
 
-
+client.register_handlers_client(dp=dp)
 other.register_handlers_other(dp=dp)
 
 

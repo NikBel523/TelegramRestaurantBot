@@ -1,5 +1,5 @@
 .idea
-.censorship.json
+censorship.json
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
