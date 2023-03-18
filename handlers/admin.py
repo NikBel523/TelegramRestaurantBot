@@ -5,7 +5,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 
 from create_bot import bot
 from data_base import sqlite_db
-
+from keyboards import admin_kb
 
 ID = None
 
@@ -22,7 +22,7 @@ class FSMAdmin(StatesGroup):
 async def admin_command(message: types.Message):
     global ID
     ID = message.from_user.id
-    await bot.send_message(message.from_user.id, "Ready for admin commands.")
+    await bot.send_message(message.from_user.id, "Ready for admin commands.", reply_markup=admin_kb.button_case_admin)
     await message.delete()
 
 
