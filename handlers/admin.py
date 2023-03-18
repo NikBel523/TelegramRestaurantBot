@@ -4,6 +4,7 @@ from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
 from create_bot import bot
+from data_base import sqlite_db
 
 
 ID = None
@@ -65,12 +66,11 @@ async def load_description(message: types.Message, state: FSMContext):
     await message.reply("Now enter price")
 
 
-# Accept the last step (price)
+# Accept the last step (price), and upload new menu item data to database
 async def load_price(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data["price"] = float(message.text)
-    async with state.proxy() as data:
-        await message.reply(str(data))
+    await sqlite_db.sql_add_command(state)
     await state.finish()
 
 
